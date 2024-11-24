@@ -13,4 +13,6 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     Optional<Section> findByIdWithGeoClasses(@Param("id") long id);
 
     List<Section> findSectionsByGeoClassesId(long id);
+
+    List<Section> findSectionsByGeoClassesCode(String code);
 }

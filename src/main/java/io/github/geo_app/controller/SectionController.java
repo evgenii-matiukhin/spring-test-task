@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class SectionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Section> getSectionById(@PathVariable("id") long id) {
-        return new ResponseEntity<>(sectionService.getSectionById(id), HttpStatus.OK);
+        return ResponseEntity.ok(sectionService.getSectionById(id));
     }
 
     @PostMapping
@@ -67,5 +68,10 @@ public class SectionController {
     @GetMapping("/{id}/geo-classes")
     public ResponseEntity<List<GeoClass>> getGeoClassesBySectionId(@PathVariable("id") long id) {
         return ResponseEntity.ok(geoClassService.getGeoClassesBySectionId(id));
+    }
+
+    @GetMapping("/by-code")
+    public ResponseEntity<List<Section>> getGeoClassesBySectionId(@RequestParam("code") String code) {
+        return ResponseEntity.ok(sectionService.findSectionsByGeoClassCode(code));
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -70,5 +71,9 @@ public class SectionService {
             throw new SectionNotFoundException(id);
         }
         sectionRepository.deleteById(id);
+    }
+
+    public List<Section> findSectionsByGeoClassCode(String code) {
+        return sectionRepository.findSectionsByGeoClassesCode(code);
     }
 }
