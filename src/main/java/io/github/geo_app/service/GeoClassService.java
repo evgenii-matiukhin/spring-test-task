@@ -37,9 +37,6 @@ public class GeoClassService {
     }
 
     public void deleteGeoClass(long id) {
-        if (!geoClassRepository.existsById(id)) {
-            throw new GeoClassNotFoundException(id);
-        }
         geoClassRepository.deleteById(id);
     }
 

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class GeoClass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotBlank
     private String name;
@@ -47,5 +48,6 @@ public class GeoClass {
             mappedBy = "geoClasses")
     @JsonIgnore
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private final Set<Section> sections = new HashSet<>();
 }

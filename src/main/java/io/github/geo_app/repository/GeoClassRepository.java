@@ -9,7 +9,5 @@ public interface GeoClassRepository extends JpaRepository<GeoClass, Long> {
 
     GeoClass findByCode(String code);
 
-//    @Query("SELECT gc FROM GeoClass gc JOIN FETCH gc.sections s WHERE s.id = :id")
     List<GeoClass> findGeoClassesBySectionsId(long id);
-
 }

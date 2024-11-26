@@ -5,6 +5,7 @@ import io.github.geo_app.model.GeoClass;
 import io.github.geo_app.model.Section;
 import io.github.geo_app.repository.GeoClassRepository;
 import io.github.geo_app.repository.SectionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,10 +67,8 @@ public class SectionService {
         return sectionRepository.save(existingSection);
     }
 
+    @Transactional
     public void deleteSection(long id) {
-        if (!sectionRepository.existsById(id)) {
-            throw new SectionNotFoundException(id);
-        }
         sectionRepository.deleteById(id);
     }
 

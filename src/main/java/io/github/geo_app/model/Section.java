@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,12 +32,13 @@ public class Section {
             fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
-                    CascadeType.MERGE
+                    CascadeType.MERGE,
             })
     @JoinTable(name = "section_geoclass",
             joinColumns = {@JoinColumn(name = "section_id")},
             inverseJoinColumns = {@JoinColumn(name = "geoclass_id")})
     @JsonAlias("geologicalClasses")
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<GeoClass> geoClasses = new HashSet<>();
 }
