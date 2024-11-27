@@ -46,6 +46,9 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok:1.18.30'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	// POI
+	implementation "org.apache.poi:poi:5.2.3"
 }
 
 configurations {

@@ -24,4 +24,6 @@
     <appender-ref ref="FILE"/>
   </root>
 
+  <logger name="io.github.geo_app" level="DEBUG"/>
+
 </configuration>

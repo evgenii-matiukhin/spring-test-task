@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -216,7 +217,7 @@ class SectionControllerTest {
     @Test
     void getSectionsByGeoClassCode_ShouldReturnSections() throws Exception {
         // Arrange
-        Section section = new Section(1L, "Section1", Collections.EMPTY_SET);
+        Section section = new Section(1L, "Section1", emptySet());
         when(sectionService.findSectionsByGeoClassCode("GC1")).thenReturn(Collections.singletonList(section));
 
         // Act & Assert

@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(code = HttpStatus.NOT_FOUND)
 public class GeoClassNotFoundException extends RuntimeException {
     public GeoClassNotFoundException(Long id) {
-        super("Geological class was "+id+" not found");
+        super("Geological class with id "+id+" was not found");
     }
 }
