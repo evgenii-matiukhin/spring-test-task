@@ -56,7 +56,7 @@ public class ImportService {
                 .startedAt(LocalDateTime.now())
                 .type(JobType.IMPORT)
                 .build();
-        jobRecordRepository.save(jobRecord);
+        jobRecord = jobRecordRepository.save(jobRecord);
         log.debug("Job record with id " + jobRecord.getId() + " is created");
         runImportJob(jobRecord, file);
         log.debug("Job record with id " + jobRecord.getId() + " is in progress");
@@ -72,8 +72,8 @@ public class ImportService {
     }
 
     @Async
-    private void runImportJob(JobRecord jobRecord, @NotNull MultipartFile file) {
-        CompletableFuture.runAsync(() -> {
+    CompletableFuture<Void> runImportJob(JobRecord jobRecord, @NotNull MultipartFile file) {
+        return CompletableFuture.runAsync(() -> {
             log.debug("Async job is in progress");
             try {
                 List<Section> sections = xlsReader.parse(file);
@@ -100,7 +100,7 @@ public class ImportService {
     }
 
     @Transactional
-    public void saveSectionsInTransaction(List<Section> sections) {
+    void saveSectionsInTransaction(List<Section> sections) {
         for (Section section : sections) {
             Set<GeoClass> uniqueClasses = new HashSet<>();
             for (GeoClass gc : section.getGeoClasses()) {

@@ -3,6 +3,7 @@ package io.github.geo_app.handler;
 import io.github.geo_app.exceptions.AlreadyPendingImportJobException;
 import io.github.geo_app.exceptions.BadFileTypeException;
 import io.github.geo_app.exceptions.GeoClassNotFoundException;
+import io.github.geo_app.exceptions.JobRecordNotFoundException;
 import io.github.geo_app.exceptions.SectionNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,11 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     // Not found exceptions
-    @ExceptionHandler({SectionNotFoundException.class, GeoClassNotFoundException.class})
+    @ExceptionHandler({
+            SectionNotFoundException.class,
+            GeoClassNotFoundException.class,
+            JobRecordNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     RestErrorResponse handleNotFoundException(
             RuntimeException ex) {
@@ -35,7 +40,10 @@ public class GlobalExceptionHandler {
     }
 
     // Not found exceptions
-    @ExceptionHandler({AlreadyPendingImportJobException.class, DataIntegrityViolationException.class})
+    @ExceptionHandler({
+            AlreadyPendingImportJobException.class,
+            DataIntegrityViolationException.class
+    })
     @ResponseStatus(HttpStatus.CONFLICT)
     RestErrorResponse handleConflictException(
             RuntimeException ex) {
