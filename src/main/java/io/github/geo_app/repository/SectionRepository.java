@@ -15,4 +15,7 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     List<Section> findSectionsByGeoClassesId(long id);
 
     List<Section> findSectionsByGeoClassesCode(String code);
+
+    @Query("SELECT s FROM Section s LEFT JOIN FETCH s.geoClasses ORDER BY s.name")
+    List<Section> findAllWithGeoClasses();
 }

@@ -10,7 +10,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,10 +20,10 @@ import java.util.List;
 @Component
 public class XLSReader {
 
-    public List<Section> parse(MultipartFile file) throws IOException, EncryptedDocumentException {
+    public List<Section> parse(InputStream inputStream) throws IOException, EncryptedDocumentException {
         List<Section> sections = new ArrayList<>();
-        try (InputStream is = file.getInputStream();
-             Workbook workbook = WorkbookFactory.create(is)) {
+        try (inputStream;
+             Workbook workbook = WorkbookFactory.create(inputStream)) {
             log.debug("XlS file opened");
 
             Sheet sheet = workbook.getSheetAt(0);

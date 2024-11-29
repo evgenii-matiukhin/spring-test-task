@@ -183,4 +183,27 @@ class SectionRepositoryTest {
         GeoClass geoClass = testEntityManager.find(GeoClass.class, geoClass1.getId());
         assertTrue(geoClass.getSections().isEmpty());
     }
+
+    @Test
+    void findAllWithGeoClasses_ShouldReturnSectionsWithGeoClasses() {
+        // Act
+        List<Section> sections = sectionRepository.findAllWithGeoClasses();
+
+        // Assert
+        assertNotNull(sections);
+        assertEquals(2, sections.size()); // Two sections in total
+
+        Section resultSection1 = sections.stream().filter(s -> s.getName().equals("Section1")).findFirst().orElse(null);
+        Section resultSection2 = sections.stream().filter(s -> s.getName().equals("Section2")).findFirst().orElse(null);
+
+        assertNotNull(resultSection1);
+        assertNotNull(resultSection2);
+
+        assertEquals(2, resultSection1.getGeoClasses().size()); // Section1 has 2 GeoClasses
+        assertEquals(1, resultSection2.getGeoClasses().size()); // Section2 has 1 GeoClass
+
+        assertTrue(resultSection1.getGeoClasses().stream().anyMatch(gc -> gc.getCode().equals("GC1")));
+        assertTrue(resultSection1.getGeoClasses().stream().anyMatch(gc -> gc.getCode().equals("GC2")));
+        assertTrue(resultSection2.getGeoClasses().stream().anyMatch(gc -> gc.getCode().equals("GC1")));
+    }
 }

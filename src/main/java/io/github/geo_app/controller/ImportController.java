@@ -1,7 +1,9 @@
 package io.github.geo_app.controller;
 
 import io.github.geo_app.exceptions.BadFileTypeException;
+import io.github.geo_app.model.JobContext;
 import io.github.geo_app.model.JobStatus;
+import io.github.geo_app.model.JobType;
 import io.github.geo_app.service.ImportService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -28,17 +30,18 @@ public class ImportController {
     private final ImportService importService;
 
     @PostMapping(consumes = MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> importData(@RequestParam("file") @NotNull MultipartFile file) {
+    public ResponseEntity<Object> runImportJob(@RequestParam("file") @NotNull MultipartFile file) {
         if (!file.getContentType().equals("application/vnd.ms-excel")) {
             throw new BadFileTypeException();
         }
-        UUID id = importService.importData(file);
+        JobContext jobContext = new JobContext(JobType.IMPORT, file);
+        UUID id = importService.runJob(jobContext);
         return ResponseEntity.ok(id);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobStatus> getImportStatus(@PathVariable("id") UUID id) {
-        JobStatus status = importService.getImportJobStatus(id);
+    public ResponseEntity<JobStatus> getImportJobStatus(@PathVariable("id") UUID id) {
+        JobStatus status = importService.getJobStatus(id);
         return ResponseEntity.ok(status);
     }
 }

@@ -45,7 +45,7 @@ class ImportControllerTest {
                 "dummy content".getBytes()
         );
         UUID jobId = UUID.randomUUID();
-        when(importService.importData(any())).thenReturn(jobId);
+        when(importService.runJob(any())).thenReturn(jobId);
 
         // Act & Assert
         mockMvc.perform(multipart("/api/v1/import")
@@ -55,7 +55,7 @@ class ImportControllerTest {
                 .andExpect(jsonPath("$", is(jobId.toString())));
 
         // Verify service interaction
-        verify(importService, times(1)).importData(any());
+        verify(importService, times(1)).runJob(any());
     }
 
     @Test
@@ -75,7 +75,7 @@ class ImportControllerTest {
                 .andExpect(status().isBadRequest());
 
         // Verify no service interaction
-        verify(importService, times(0)).importData(any());
+        verify(importService, times(0)).runJob(any());
     }
 
     @Test
@@ -83,7 +83,7 @@ class ImportControllerTest {
         // Arrange
         UUID jobId = UUID.randomUUID();
         JobStatus jobStatus = JobStatus.IN_PROGRESS;
-        when(importService.getImportJobStatus(jobId)).thenReturn(jobStatus);
+        when(importService.getJobStatus(jobId)).thenReturn(jobStatus);
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/import/{id}", jobId)
@@ -92,14 +92,14 @@ class ImportControllerTest {
                 .andExpect(jsonPath("$", is(jobStatus.name())));
 
         // Verify service interaction
-        verify(importService, times(1)).getImportJobStatus(jobId);
+        verify(importService, times(1)).getJobStatus(jobId);
     }
 
     @Test
     void testGetImportStatus_JobNotFound() throws Exception {
         // Arrange
         UUID jobId = UUID.randomUUID();
-        when(importService.getImportJobStatus(jobId))
+        when(importService.getJobStatus(jobId))
                 .thenThrow(new JobRecordNotFoundException(jobId));
 
         // Act & Assert
@@ -108,6 +108,6 @@ class ImportControllerTest {
                 .andExpect(status().isNotFound());
 
         // Verify service interaction
-        verify(importService, times(1)).getImportJobStatus(jobId);
+        verify(importService, times(1)).getJobStatus(jobId);
     }
 }

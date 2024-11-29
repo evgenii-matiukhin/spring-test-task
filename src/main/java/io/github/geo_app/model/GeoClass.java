@@ -37,6 +37,7 @@ public class GeoClass {
 
     @NotBlank
     @Column(unique = true)
+    @org.springframework.data.annotation.Id
     private String code;
 
     @ManyToMany(targetEntity = Section.class,

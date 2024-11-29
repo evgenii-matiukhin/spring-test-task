@@ -2,6 +2,7 @@ package io.github.geo_app.handler;
 
 import io.github.geo_app.exceptions.AlreadyPendingImportJobException;
 import io.github.geo_app.exceptions.BadFileTypeException;
+import io.github.geo_app.exceptions.ExportFileNotFoundException;
 import io.github.geo_app.exceptions.GeoClassNotFoundException;
 import io.github.geo_app.exceptions.JobRecordNotFoundException;
 import io.github.geo_app.exceptions.SectionNotFoundException;
@@ -28,7 +29,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             SectionNotFoundException.class,
             GeoClassNotFoundException.class,
-            JobRecordNotFoundException.class
+            JobRecordNotFoundException.class,
+            ExportFileNotFoundException.class
     })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     RestErrorResponse handleNotFoundException(

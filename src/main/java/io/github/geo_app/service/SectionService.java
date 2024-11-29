@@ -37,6 +37,11 @@ public class SectionService {
 
     @Transactional
     public Section createSection(Section section) {
+        saveOrUpdateGeoClass(section);
+        return sectionRepository.save(section);
+    }
+
+    public void saveOrUpdateGeoClass(Section section) {
         Set<GeoClass> uniqueClasses = new HashSet<>();
         for (GeoClass gc : section.getGeoClasses()) {
             GeoClass existingClass = geoClassRepository.findByCode(gc.getCode());
@@ -47,7 +52,6 @@ public class SectionService {
             }
         }
         section.setGeoClasses(uniqueClasses);
-        return sectionRepository.save(section);
     }
 
     @Transactional
@@ -56,16 +60,7 @@ public class SectionService {
                 .orElseThrow(() -> new SectionNotFoundException(id));
         existingSection.setName(updatedSection.getName());
 
-        Set<GeoClass> uniqueClasses = new HashSet<>();
-        for (GeoClass gc : updatedSection.getGeoClasses()) {
-            GeoClass existingClass = geoClassRepository.findByCode(gc.getCode());
-            if (existingClass != null) {
-                uniqueClasses.add(existingClass);
-            } else {
-                uniqueClasses.add(gc);
-            }
-        }
-        existingSection.setGeoClasses(uniqueClasses);
+        saveOrUpdateGeoClass(updatedSection);
         return sectionRepository.save(existingSection);
     }
 
