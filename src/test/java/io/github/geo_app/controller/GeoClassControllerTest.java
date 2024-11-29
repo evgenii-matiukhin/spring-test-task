@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Base64;
 
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +38,32 @@ class GeoClassControllerTest {
     private GeoClassService geoClassService;
 
     @Test
+    void createGeoClass_ShouldReturnUnauthorizedIfNoAuthHeader() throws Exception {
+        mockMvc.perform(post("/api/v1/geo-classes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"GeoClass1\", \"code\": \"GC11\"}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void createGeoClass_ShouldReturnUnauthorizedIfInvalidAuthHeader() throws Exception {
+        mockMvc.perform(post("/api/v1/geo-classes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("invalid:password".getBytes()))
+                        .content("{\"name\": \"GeoClass1\", \"code\": \"GC11\"}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void createGeoClass_ShouldReturnForbiddenIfUserHasNoRole() throws Exception {
+        mockMvc.perform(post("/api/v1/geo-classes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("user:password".getBytes()))
+                        .content("{\"name\": \"GeoClass1\", \"code\": \"GC11\"}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void getGeoClasses_ShouldReturnPagedGeoClasses() throws Exception {
         // Arrange
         GeoClass geoClass1 = new GeoClass(1L, "GeoClass1", "GC11");
@@ -47,6 +74,7 @@ class GeoClassControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/geo-classes")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].name").value("GeoClass1"))
@@ -66,6 +94,7 @@ class GeoClassControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/geo-classes/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("GeoClass1"))
@@ -83,6 +112,7 @@ class GeoClassControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/geo-classes/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
@@ -99,6 +129,7 @@ class GeoClassControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/geo-classes")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"GeoClass1\", \"code\": \"GC11\"}"))
                 .andExpect(status().isCreated())
@@ -113,6 +144,7 @@ class GeoClassControllerTest {
     void createGeoClass_ShouldReturnBadRequestIfDataIsInvalid() throws Exception {
         // Act & Assert
         mockMvc.perform(post("/api/v1/geo-classes")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"GeoClass1\"}"))
                 .andExpect(status().isBadRequest());
@@ -127,6 +159,7 @@ class GeoClassControllerTest {
 
         // Act & Assert
         mockMvc.perform(put("/api/v1/geo-classes/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"UpdatedGeoClass\", \"code\": \"GC11\"}"))
                 .andExpect(status().isOk())
@@ -141,6 +174,7 @@ class GeoClassControllerTest {
     void updateGeoClass_ShouldReturnBadRequestIfDataIsInvalid() throws Exception {
         // Act & Assert
         mockMvc.perform(put("/api/v1/geo-classes/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"GeoClass1\"}"))
                 .andExpect(status().isBadRequest());
@@ -150,7 +184,8 @@ class GeoClassControllerTest {
     void deleteGeoClass_ShouldReturnNoContent() throws Exception {
         // Act & Assert
         mockMvc.perform(delete("/api/v1/geo-classes/1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         verify(geoClassService, times(1)).deleteGeoClass(1L);

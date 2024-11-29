@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -45,6 +46,32 @@ class SectionControllerTest {
     private GeoClassService geoClassService;
 
     @Test
+    void createSection_ShouldReturnUnauthorizedIfNoAuthHeader() throws Exception {
+        mockMvc.perform(post("/api/v1/sections")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"Section1\"}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void createSection_ShouldReturnUnauthorizedIfInvalidAuthHeader() throws Exception {
+        mockMvc.perform(post("/api/v1/sections")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("invalid:password".getBytes()))
+                        .content("{\"name\": \"Section1\"}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void createSection_ShouldReturnForbiddenIfUserHasNoRole() throws Exception {
+        mockMvc.perform(post("/api/v1/sections")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("user:password".getBytes()))
+                        .content("{\"name\": \"Section1\"}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void getSections_ShouldReturnPagedSections() throws Exception {
         // Arrange
         Section section = new Section(1L, "Section1", null);
@@ -53,6 +80,7 @@ class SectionControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/sections")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].name").value("Section1"));
@@ -68,6 +96,7 @@ class SectionControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/sections/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Section1"));
@@ -83,6 +112,7 @@ class SectionControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/sections/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
@@ -97,6 +127,7 @@ class SectionControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/sections/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
 
@@ -113,6 +144,7 @@ class SectionControllerTest {
         // Act & Assert
         mockMvc.perform(post("/api/v1/sections")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .content("{\"name\": \"Section1\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
@@ -132,6 +164,7 @@ class SectionControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/sections")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Section1\", \"geoClasses\": [{\"name\": \"GeoClass1\", \"code\": \"GC1\"}]}"))
                 .andExpect(status().isCreated())
@@ -147,6 +180,7 @@ class SectionControllerTest {
     void createSection_ShouldReturnBadRequestIfDataIsInvalid() throws Exception {
         // Act & Assert
         mockMvc.perform(post("/api/v1/sections")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{INVALID}"))
                 .andExpect(status().isBadRequest());
@@ -156,6 +190,7 @@ class SectionControllerTest {
     void createSection_ShouldReturnBadRequestIfNameIsNull() throws Exception {
         // Act & Assert
         mockMvc.perform(post("/api/v1/sections")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"{\\\"name\\\": \\\"\\\"}\"}"))
                 .andExpect(status().isBadRequest());
@@ -169,6 +204,7 @@ class SectionControllerTest {
 
         // Act & Assert
         mockMvc.perform(put("/api/v1/sections/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"UpdatedSection\"}"))
                 .andExpect(status().isOk())
@@ -182,6 +218,7 @@ class SectionControllerTest {
     void updateSection_ShouldReturnBadRequestIfDataIsInvalid() throws Exception {
         // Act & Assert
         mockMvc.perform(put("/api/v1/sections/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{INVALID}"))
                 .andExpect(status().isBadRequest());
@@ -191,6 +228,7 @@ class SectionControllerTest {
     void deleteSection_ShouldReturnNoContent() throws Exception {
         // Act & Assert
         mockMvc.perform(delete("/api/v1/sections/1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -206,6 +244,7 @@ class SectionControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/sections/1/geo-classes")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("GeoClass1"))
@@ -223,6 +262,7 @@ class SectionControllerTest {
         // Act & Assert
         mockMvc.perform(get("/api/v1/sections/by-code")
                         .param("code", "GC1")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Section1"));

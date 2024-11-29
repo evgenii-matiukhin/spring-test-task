@@ -81,6 +81,16 @@ This project implements a backend application for managing **Sections** and thei
 2. Run `gradle bootRun` to start the application.
 3. Access the application API at `http://localhost:8080/api/v1/` in your web browser.
 
+### User roles
+
+- **ADMIN**: has access to all endpoints.
+- **USER**: has access to all endpoints except for creating new sections and geological classes.
+
+### Users
+
+- **admin:admin** belongs to role **ADMIN**
+- **user:password** belongs to role **USER**
+
 
 
 

@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Base64;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
@@ -49,6 +50,7 @@ class ExportControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/api/v1/export")
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(jobId.toString())));
@@ -61,6 +63,7 @@ class ExportControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/export/{id}", jobId)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(JobStatus.DONE.name())));
@@ -74,6 +77,7 @@ class ExportControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/export/{id}/file", jobId)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/vnd.ms-excel"))
@@ -88,6 +92,7 @@ class ExportControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/export/{id}/file", jobId)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
     }

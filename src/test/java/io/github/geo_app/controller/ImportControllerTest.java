@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Base64;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
@@ -50,6 +51,7 @@ class ImportControllerTest {
         // Act & Assert
         mockMvc.perform(multipart("/api/v1/import")
                         .file(validFile)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(jobId.toString())));
@@ -71,6 +73,7 @@ class ImportControllerTest {
         // Act & Assert
         mockMvc.perform(multipart("/api/v1/import")
                         .file(invalidFile)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest());
 
@@ -87,6 +90,7 @@ class ImportControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/import/{id}", jobId)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(jobStatus.name())));
@@ -104,6 +108,7 @@ class ImportControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/v1/import/{id}", jobId)
+                        .header("Authorization", "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
