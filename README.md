@@ -91,6 +91,9 @@ This project implements a backend application for managing **Sections** and thei
 - **admin:admin** belongs to role **ADMIN**
 - **user:password** belongs to role **USER**
 
+### API testing
+Use postman collection [Postman collection](docs/Geo%20App.postman_collection.json) to test API endpoints.
+
 
 
 

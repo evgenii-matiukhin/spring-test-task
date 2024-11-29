@@ -1,0 +1,545 @@
+{
+	"info": {
+		"_postman_id": "09badcc4-5a32-4605-bd26-0ffae74e1b78",
+		"name": "Geo App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19211386"
+	},
+	"item": [
+		{
+			"name": "Sections",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Section 1\",\n    \"geologicalClasses\": [\n        { \n            \"name\": \"Geo Class 11\",\n            \"code\": \"GC11\"\n        },\n        { \n            \"name\": \"Geo Class 12\",\n            \"code\": \"GC12\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/{{SECTION_API}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{SECTION_API}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Section 1\",\n    \"geologicalClasses\": [\n        { \n            \"name\": \"Geo Class 11\",\n            \"code\": \"GC11\"\n        },\n        { \n            \"name\": \"Geo Class 13\",\n            \"code\": \"GC13\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/{{SECTION_API}}/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{SECTION_API}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetOne",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{SECTION_API}}/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{SECTION_API}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetList",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{SECTION_API}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{SECTION_API}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetByCode",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{SECTION_API}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{SECTION_API}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetGeoClassesForOne",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{SECTION_API}}/1/geo-classes",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{SECTION_API}}",
+								"1",
+								"geo-classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{SECTION_API}}/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{SECTION_API}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GeoClasses",
+			"item": [
+				{
+					"name": "GetOne",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Section 1\",\n    \"geologicalClasses\": [\n        { \n            \"name\": \"Geo Class 11\",\n            \"code\": \"GC11\"\n        },\n        { \n            \"name\": \"Geo Class 12\",\n            \"code\": \"GC12\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/{{CLASSES_API}}/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{CLASSES_API}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{CLASSES_API}}/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{CLASSES_API}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetList",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{CLASSES_API}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{CLASSES_API}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"name\": \"Geo Class 11\",\n    \"code\": \"GC11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/{{CLASSES_API}}/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{CLASSES_API}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"name\": \"Geo Class 11\",\n    \"code\": \"GC11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/{{CLASSES_API}}/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{CLASSES_API}}",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "import",
+			"item": [
+				{
+					"name": "Create import job",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{IMPORT_API}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{IMPORT_API}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{IMPORT_API}}/5087cb44-0175-4cd6-bbf0-544a9ba1790c",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{IMPORT_API}}",
+								"5087cb44-0175-4cd6-bbf0-544a9ba1790c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "export",
+			"item": [
+				{
+					"name": "Create export job",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{EXPORT_API}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{EXPORT_API}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{EXPORT_API}}/5087cb44-0175-4cd6-bbf0-544a9ba1790c",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{EXPORT_API}}",
+								"5087cb44-0175-4cd6-bbf0-544a9ba1790c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET export file",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{HOST}}/{{EXPORT_API}}/5087cb44-0175-4cd6-bbf0-544a9ba1790c",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"{{EXPORT_API}}",
+								"5087cb44-0175-4cd6-bbf0-544a9ba1790c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "admin",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HOST",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "SECTION_API",
+			"value": "api/v1/sections",
+			"type": "string"
+		},
+		{
+			"key": "CLASSES_API",
+			"value": "api/v1/geoclasses",
+			"type": "string"
+		},
+		{
+			"key": "IMPORT_API",
+			"value": "api/v1/import",
+			"type": "string"
+		},
+		{
+			"key": "EXPORT_API",
+			"value": "api/v1/export",
+			"type": "string"
+		}
+	]
+}
