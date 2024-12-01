@@ -5,7 +5,6 @@ import io.github.geo_app.model.JobStatus;
 import io.github.geo_app.model.JobType;
 import io.github.geo_app.service.ExportService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class ExportController {
 
-    @Autowired
     private final ExportService exportService;
-
 
     @PostMapping
     public ResponseEntity<Object> runExportJob() {

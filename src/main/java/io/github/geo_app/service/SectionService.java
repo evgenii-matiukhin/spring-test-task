@@ -7,7 +7,6 @@ import io.github.geo_app.repository.GeoClassRepository;
 import io.github.geo_app.repository.SectionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,10 +19,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class SectionService {
 
-    @Autowired
     private final SectionRepository sectionRepository;
 
-    @Autowired
     private final GeoClassRepository geoClassRepository;
 
     public Page<Section> getAllSections(Pageable pageable) {

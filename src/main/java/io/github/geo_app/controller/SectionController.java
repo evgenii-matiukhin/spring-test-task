@@ -5,7 +5,6 @@ import io.github.geo_app.model.Section;
 import io.github.geo_app.service.GeoClassService;
 import io.github.geo_app.service.SectionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -30,10 +29,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(path = "/api/v1/sections", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 public class SectionController {
 
-    @Autowired
     private final SectionService sectionService;
 
-    @Autowired
     private final GeoClassService geoClassService;
 
     @GetMapping

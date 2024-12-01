@@ -7,6 +7,7 @@ import io.github.geo_app.model.JobContext;
 import io.github.geo_app.model.JobRecord;
 import io.github.geo_app.model.JobStatus;
 import io.github.geo_app.model.Section;
+import io.github.geo_app.repository.JobRecordRepository;
 import io.github.geo_app.repository.SectionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ExportService extends BaseAsyncService {
 
-    private SectionRepository sectionRepository;
+    private final SectionRepository sectionRepository;
 
-    private XLSWriter xlsWriter;
+    private final JobRecordRepository jobRecordRepository;
+
+    private final XLSWriter xlsWriter;
 
     @Override
     @Async
