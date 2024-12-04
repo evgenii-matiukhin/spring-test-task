@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,26 +44,24 @@ public abstract class BaseAsyncService {
     }
 
     @Async
-    CompletableFuture<Void> wrapAsyncJob(JobRecord jobRecord, JobContext jobContext) {
-        return CompletableFuture.runAsync(() -> {
-            log.debug("Async job is in progress");
-            runAsync(jobRecord, jobContext);
+    void wrapAsyncJob(JobRecord jobRecord, JobContext jobContext) {
+        Thread.startVirtualThread(() -> {
+            try {
+                log.debug("Async job is in progress");
+                runAsync(jobRecord, jobContext);
 
-        }).handle((result, ex) -> {
-            if (ex == null) {
                 log.debug("Async job completed successfully");
                 jobRecord.setStatus(JobStatus.DONE);
-            } else {
+            } catch (Exception ex) {
                 log.warn("Async job failed", ex);
                 jobRecord.setStatus(JobStatus.ERROR);
+            } finally {
+                jobRecord.setFinishedAt(LocalDateTime.now());
+                jobRecordRepository.save(jobRecord);
             }
-
-            jobRecord.setFinishedAt(LocalDateTime.now());
-            jobRecordRepository.save(jobRecord);
-
-            return null;
         });
     }
+
 
     @Async
     protected abstract void runAsync(JobRecord jobRecord, JobContext jobContext);
