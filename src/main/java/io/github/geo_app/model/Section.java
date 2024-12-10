@@ -33,6 +33,7 @@ public class Section {
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE,
+                    CascadeType.REFRESH,
             })
     @JoinTable(name = "section_geoclass",
             joinColumns = {@JoinColumn(name = "section_id")},

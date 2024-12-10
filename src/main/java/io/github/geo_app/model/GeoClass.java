@@ -44,7 +44,8 @@ public class GeoClass {
             fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
-                    CascadeType.MERGE
+                    CascadeType.MERGE,
+                    CascadeType.REFRESH,
             },
             mappedBy = "geoClasses")
     @JsonIgnore

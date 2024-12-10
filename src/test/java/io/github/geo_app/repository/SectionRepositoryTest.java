@@ -9,7 +9,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
-@Transactional
 @DataJpaTest
 @TestInstance(PER_CLASS)
 class SectionRepositoryTest {
@@ -63,8 +61,6 @@ class SectionRepositoryTest {
         testEntityManager.persist(geoClass2);
         testEntityManager.persist(section1);
         testEntityManager.persist(section2);
-        testEntityManager.flush();
-        testEntityManager.clear();
     }
 
     // --- Query Tests ---
@@ -100,7 +96,6 @@ class SectionRepositoryTest {
         geoClass3.setName("GeoClass3");
         geoClass3.setCode("GC3");
         testEntityManager.persist(geoClass3);
-        testEntityManager.flush();
 
         List<Section> result = sectionRepository.findSectionsByGeoClassesId(geoClass3.getId());
         assertNotNull(result);
@@ -154,19 +149,15 @@ class SectionRepositoryTest {
     void updateSection_ShouldPersistChanges() {
         section1.setName("UpdatedSection");
         sectionRepository.save(section1);
-        testEntityManager.flush();
 
         Section updatedSection = testEntityManager.find(Section.class, section1.getId());
         assertEquals("UpdatedSection", updatedSection.getName());
     }
 
-    @Disabled("This test is failing, because delete operation can't be done consistently in a transaction")
     @Test
     void deleteSection_ShouldRemoveSection() {
         sectionRepository.delete(section2);
-        testEntityManager.flush();
 
-        testEntityManager.detach(section2);
         Section deletedSection = testEntityManager.find(Section.class, section2.getId());
         assertNull(deletedSection);
 
@@ -174,11 +165,10 @@ class SectionRepositoryTest {
         assertNotNull(geoClass);
     }
 
-    @Disabled("This test is failing, because delete operation can't be done consistently in a transaction")
     @Test
+    @Disabled("This test is failing, because delete operation can't be done consistently in a transaction")
     void deleteSection_ShouldClearRelationships() {
         sectionRepository.delete(section2);
-        testEntityManager.flush();
 
         GeoClass geoClass = testEntityManager.find(GeoClass.class, geoClass1.getId());
         assertTrue(geoClass.getSections().isEmpty());

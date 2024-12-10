@@ -9,7 +9,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
-@Transactional
 @DataJpaTest
 @TestInstance(PER_CLASS)
 class JobRecordRepositoryTest {
@@ -48,7 +46,6 @@ class JobRecordRepositoryTest {
 
         testEntityManager.persist(job1);
         testEntityManager.persist(job2);
-        testEntityManager.flush();
     }
 
     @Test
@@ -116,7 +113,6 @@ class JobRecordRepositoryTest {
     void testDeleteJobRecord_ShouldRemoveJobRecord() {
         // Act
         jobRecordRepository.delete(job1);
-        testEntityManager.flush();
 
         // Assert
         JobRecord deletedJob = testEntityManager.find(JobRecord.class, job1.getId());

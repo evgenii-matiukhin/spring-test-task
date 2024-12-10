@@ -9,7 +9,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +16,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
-@Transactional
 @DataJpaTest
 @TestInstance(PER_CLASS)
 class GeoClassRepositoryTest {
@@ -56,7 +54,6 @@ class GeoClassRepositoryTest {
         testEntityManager.persist(section);
         testEntityManager.persist(geoClass1);
         testEntityManager.persist(geoClass2);
-        testEntityManager.flush();
     }
 
     @Test
@@ -97,7 +94,6 @@ class GeoClassRepositoryTest {
         Section emptySection = new Section();
         emptySection.setName("EmptySection");
         testEntityManager.persist(emptySection);
-        testEntityManager.flush();
 
         // Act
         List<GeoClass> result = geoClassRepository.findGeoClassesBySectionsId(emptySection.getId());
@@ -124,16 +120,27 @@ class GeoClassRepositoryTest {
         assertEquals("GC3", result.getCode());
     }
 
-    @Disabled("This test is failing, because delete operation can't be done consistently in a transaction")
+//    @Disabled("This test is failing, because delete operation can't be done consistently in a transaction")
     @Test
     void testDelete_ShouldRemoveGeoClass() {
         // Act
         geoClassRepository.delete(geoClass1);
-        testEntityManager.flush();
 
         // Assert
         GeoClass result = testEntityManager.find(GeoClass.class, geoClass1.getId());
         assertNull(result);
+    }
+
+    @Test
+    @Disabled("This test is failing, because delete operation can't be done consistently in a transaction")
+    void testDelete_ShouldRemoveGeoClassAndClearRelationships() {
+        // Act
+        geoClassRepository.delete(geoClass1);
+
+        // Assert
+        Section s = testEntityManager.find(Section.class, section.getId());
+        assertNotNull(s);
+        assertEquals(1, s.getGeoClasses().size());
     }
 
     @Test
