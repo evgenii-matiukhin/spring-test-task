@@ -8,6 +8,7 @@ import { Loader2, Lock } from "lucide-react"
 import { toast } from "sonner"
 
 import { login } from "@/lib/api/auth"
+import { useAuth } from "@/lib/hooks/useAuth"
 import { loginFormSchema } from "@/lib/validations/auth"
 import type { LoginFormValues } from "@/lib/validations/auth"
 import { Button } from "@/components/ui/button"
@@ -31,6 +32,7 @@ import {
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { setCredentials } = useAuth()
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -44,6 +46,8 @@ export function LoginForm() {
     setIsLoading(true)
     try {
       await login(data.username, data.password)
+      setCredentials(data.username, data.password)
+      toast.success('Successfully logged in')
       router.push('/sections')
     } catch (error) {
       toast.error('Invalid username or password')

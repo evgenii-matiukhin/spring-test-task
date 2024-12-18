@@ -23,7 +23,10 @@ export const columns = [
     header: "Geological Classes",
     cell: ({ row }) => {
       const classes = row.original.geologicalClasses
-      return classes.map(c => c.name).join(", ")
+      return classes
+        .slice(0, 2) // Take the first 2 classes
+        .map((c) => c.name) // Map to names
+        .join(", ") + (classes.length > 2 ? "..." : "")
     },
   },
   {
@@ -41,7 +44,8 @@ export const columns = [
           <DropdownMenuContent align="end">
             <DropdownMenuItem
               onClick={() => {
-                // Handle edit - implement this
+                setOpenDialog(true); // Open the dialog
+                setCurrentSection(section); // Set the current section for editing
               }}
             >
               <Pencil className="mr-2 h-4 w-4" />

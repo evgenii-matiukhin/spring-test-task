@@ -10,14 +10,15 @@ import { columns } from "@/components/sections/columns"
 import { SectionDialog } from "@/components/sections/section-dialog"
 import { ImportDialog } from "@/components/sections/import-dialog"
 import { fetchSections } from "@/lib/api/sections"
-import type { Section } from "@/lib/types"
+import type { Section, SectionPage } from "@/lib/types"
 import { startExport, checkExportStatus, downloadExportFile } from "@/lib/api/import-export"
 
 export default function SectionsPage() {
-  const [sections, setSections] = useState<Section[]>([])
+  const [sectionPage, setSectionPage] = useState<SectionPage>()
   const [isLoading, setIsLoading] = useState(true)
   const [openDialog, setOpenDialog] = useState(false)
   const [openImportDialog, setOpenImportDialog] = useState(false)
+  const [currentSection, setCurrentSection] = useState<Section | null>(null)
 
   useEffect(() => {
     loadSections()
@@ -26,7 +27,7 @@ export default function SectionsPage() {
   async function loadSections() {
     try {
       const data = await fetchSections()
-      setSections(data)
+      setSectionPage(data)
     } catch (error) {
       toast.error("Failed to load sections")
     } finally {
@@ -84,11 +85,12 @@ export default function SectionsPage() {
         </div>
       </div>
 
-      <DataTable columns={columns} data={sections} />
+      <DataTable columns={columns} data={sectionPage ? sectionPage.content : []} />
 
       <SectionDialog
         open={openDialog}
         onOpenChange={setOpenDialog}
+        section={currentSection}
         onSuccess={loadSections}
       />
 

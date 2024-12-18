@@ -1,37 +1,64 @@
-const API_BASE = '/api/v1';
+import { API_CONFIG } from './config'
+import { useAuth } from '@/lib/hooks/useAuth'
 
 export async function startImport(file: File) {
-  const formData = new FormData();
-  formData.append('file', file);
+  const { username, password } = useAuth.getState()
+  if (!username || !password) throw new Error('Not authenticated')
+
+  const formData = new FormData()
+  formData.append('file', file)
   
-  const response = await fetch(`${API_BASE}/import`, {
+  const response = await fetch(`${API_CONFIG.BASE_URL}/import`, {
     method: 'POST',
+    headers: {
+      'Authorization': API_CONFIG.getAuthHeaders(username, password).Authorization,
+    },
     body: formData,
-  });
-  if (!response.ok) throw new Error('Failed to start import');
-  return response.json();
+  })
+  if (!response.ok) throw new Error('Failed to start import')
+  return response.json()
 }
 
 export async function checkImportStatus(jobId: string) {
-  const response = await fetch(`${API_BASE}/import/${jobId}`);
-  if (!response.ok) throw new Error('Failed to check import status');
-  return response.json();
+  const { username, password } = useAuth.getState()
+  if (!username || !password) throw new Error('Not authenticated')
+
+  const response = await fetch(`${API_CONFIG.BASE_URL}/import/${jobId}`, {
+    headers: API_CONFIG.getAuthHeaders(username, password),
+  })
+  if (!response.ok) throw new Error('Failed to check import status')
+  return response.json()
 }
 
 export async function startExport() {
-  const response = await fetch(`${API_BASE}/export`);
-  if (!response.ok) throw new Error('Failed to start export');
-  return response.json();
+  const { username, password } = useAuth.getState()
+  if (!username || !password) throw new Error('Not authenticated')
+
+  const response = await fetch(`${API_CONFIG.BASE_URL}/export`, {
+    headers: API_CONFIG.getAuthHeaders(username, password),
+  })
+  if (!response.ok) throw new Error('Failed to start export')
+  return response.json()
 }
 
 export async function checkExportStatus(jobId: string) {
-  const response = await fetch(`${API_BASE}/export/${jobId}`);
-  if (!response.ok) throw new Error('Failed to check export status');
-  return response.json();
+  const { username, password } = useAuth.getState()
+  if (!username || !password) throw new Error('Not authenticated')
+
+  const response = await fetch(`${API_CONFIG.BASE_URL}/export/${jobId}`, {
+    headers: API_CONFIG.getAuthHeaders(username, password),
+  })
+  if (!response.ok) throw new Error('Failed to check export status')
+  return response.json()
 }
 
 export async function downloadExportFile(jobId: string) {
-  const response = await fetch(`${API_BASE}/export/${jobId}/file`);
-  if (!response.ok) throw new Error('Failed to download export file');
-  return response.blob();
+  const { username, password } = useAuth.getState()
+  if (!username || !password) throw new Error('Not authenticated')
+
+  const response = await fetch(`${API_CONFIG.BASE_URL}/export/${jobId}/file`, {
+    headers: API_CONFIG.getAuthHeaders(username, password),
+  })
+  if (!response.ok) throw new Error('Failed to download export file')
+  return response.blob()
 }
