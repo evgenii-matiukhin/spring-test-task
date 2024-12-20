@@ -1,6 +1,7 @@
 package io.github.geo_app.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -33,12 +34,12 @@ public class Section {
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE,
-                    CascadeType.REFRESH,
             })
     @JoinTable(name = "section_geoclass",
             joinColumns = {@JoinColumn(name = "section_id")},
             inverseJoinColumns = {@JoinColumn(name = "geoclass_id")})
     @JsonAlias("geologicalClasses")
+    @JsonProperty("geologicalClasses")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<GeoClass> geoClasses = new HashSet<>();
