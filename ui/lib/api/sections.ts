@@ -1,18 +1,23 @@
 import { API_CONFIG } from './config'
 import { useAuth } from '@/lib/hooks/useAuth'
+import type { PageRequest, SectionPage, Section } from '@/lib/types'
 
-export async function fetchSections() {
+export async function fetchSections(pageRequest?: PageRequest): Promise<SectionPage> {
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 
-  const response = await fetch(`${API_CONFIG.BASE_URL}/sections`, {
+  const params = pageRequest 
+    ? `?page=${pageRequest.page}&size=${pageRequest.size}` 
+    : ''
+
+  const response = await fetch(`${API_CONFIG.BASE_URL}/sections${params}`, {
     headers: API_CONFIG.getAuthHeaders(username, password),
   })
   if (!response.ok) throw new Error('Failed to fetch sections')
   return response.json()
 }
 
-export async function createSection(data: { name: string; geologicalClasses: string[] }) {
+export async function createSection(data: Omit<Section, 'id'>): Promise<Section> {
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 
@@ -25,7 +30,8 @@ export async function createSection(data: { name: string; geologicalClasses: str
   return response.json()
 }
 
-export async function updateSection(id: string, data: { name: string; geologicalClasses: string[] }) {
+export async function updateSection(id: number | undefined, data: Omit<Section, 'id'>): Promise<Section> {
+  if (!id) throw new Error('Section ID is required')
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 
@@ -38,7 +44,7 @@ export async function updateSection(id: string, data: { name: string; geological
   return response.json()
 }
 
-export async function deleteSection(id: string) {
+export async function deleteSection(id: number): Promise<void> {
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 

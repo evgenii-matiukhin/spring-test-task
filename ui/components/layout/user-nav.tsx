@@ -3,6 +3,8 @@
 import { LogOut } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/hooks/useAuth"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,31 +18,21 @@ export function UserNav() {
   const router = useRouter()
   const { username, clearCredentials } = useAuth()
 
-  // Extract initials from username
-  const getInitials = (name: string) =>
-    name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-
-  const initials = username ? getInitials(username) : "U" // Default to "U" if no username
-
   const handleLogout = () => {
     clearCredentials()
-    router.push("/")
+    router.push('/')
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        {/* Button displaying user initials */}
-        <button
-          className="relative flex items-center justify-center h-8 w-8 rounded-full bg-gray-200 text-gray-800 font-bold"
-          aria-label="User menu"
-        >
-          {initials}
-        </button>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarFallback>
+              {username?.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">

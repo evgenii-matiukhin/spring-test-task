@@ -5,6 +5,7 @@ import { toast } from "sonner"
 import { Upload } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import {
   Dialog,
   DialogContent,
@@ -33,12 +34,12 @@ export function ImportDialog({
 
     setIsLoading(true)
     try {
-      const { id } = await startImport(file)
+      const id = await startImport(file)
       toast.info("Import started")
       
       // Poll for import status
       const interval = setInterval(async () => {
-        const { status } = await checkImportStatus(id)
+        const status = await checkImportStatus(id)
         if (status === "DONE") {
           clearInterval(interval)
           toast.success("Import completed")
@@ -47,23 +48,37 @@ export function ImportDialog({
         } else if (status === "ERROR") {
           clearInterval(interval)
           toast.error("Import failed")
+          onOpenChange(false)
         }
       }, 1000)
     } catch (error) {
       toast.error("Failed to start import")
-    } finally {
-      setIsLoading(false)
+      onOpenChange(false)
     }
   }
 
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      setIsLoading(false)
+    }
+    onOpenChange(newOpen)
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Import Sections</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <div className="flex items-center justify-center w-full">
+          {isLoading ? 
+            (
+            <div className="flex items-center justify-center w-full">
+              <Spinner />
+            </div>
+          )
+         : 
+          (<div className="flex items-center justify-center w-full">
             <label
               htmlFor="file-upload"
               className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-secondary/50"
@@ -84,6 +99,7 @@ export function ImportDialog({
               />
             </label>
           </div>
+  )}
         </div>
       </DialogContent>
     </Dialog>

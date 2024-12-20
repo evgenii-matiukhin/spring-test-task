@@ -6,9 +6,9 @@ import { Toaster } from 'sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Geological App',
-  description: 'The app is about geological sections and classes',
-};
+  title: 'Geo App',
+  description: 'Super geo app',
+}
 
 export default function RootLayout({
   children,
@@ -17,12 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <body className={inter.className}>
-        <Toaster position="top-right" />
-        {children}
+          <Toaster position="top-right" />
+          {children}
       </body>
     </html>
   )

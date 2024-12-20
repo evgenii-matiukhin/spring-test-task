@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/sections/data-table"
 import { columns } from "@/components/sections/columns"
+import { Pagination } from "@/components/sections/pagination"
 import { SectionDialog } from "@/components/sections/section-dialog"
 import { ImportDialog } from "@/components/sections/import-dialog"
 import { fetchSections } from "@/lib/api/sections"
@@ -14,19 +15,31 @@ import type { Section, SectionPage } from "@/lib/types"
 import { startExport, checkExportStatus, downloadExportFile } from "@/lib/api/import-export"
 
 export default function SectionsPage() {
-  const [sectionPage, setSectionPage] = useState<SectionPage>()
+  const [sectionPage, setSectionPage] = useState<SectionPage>({
+    content: [],
+    empty: true,
+    first: true,
+    last: true,
+    number: 0,
+    numberOfElements: 0,
+    size: 10,
+    totalElements: BigInt(0),
+    totalPages: 0,
+    sort: {}
+  })
   const [isLoading, setIsLoading] = useState(true)
   const [openDialog, setOpenDialog] = useState(false)
   const [openImportDialog, setOpenImportDialog] = useState(false)
-  const [currentSection, setCurrentSection] = useState<Section | null>(null)
+  const [selectedSection, setSelectedSection] = useState<Section | undefined>()
 
   useEffect(() => {
     loadSections()
   }, [])
 
-  async function loadSections() {
+  async function loadSections(page = 0, size = 10) {
     try {
-      const data = await fetchSections()
+      setIsLoading(true)
+      const data = await fetchSections({ page, size })
       setSectionPage(data)
     } catch (error) {
       toast.error("Failed to load sections")
@@ -35,21 +48,42 @@ export default function SectionsPage() {
     }
   }
 
+  const handleEdit = (section: Section) => {
+    setSelectedSection(section)
+    setOpenDialog(true)
+  }
+
+  const handleCloseDialog = (open: boolean) => {
+    setOpenDialog(open)
+    if (!open) {
+      setSelectedSection(undefined)
+    }
+  }
+
+  const handlePageChange = (page: number) => {
+    loadSections(page, sectionPage.size)
+  }
+
+  const handlePageSizeChange = (size: number) => {
+    loadSections(0, size)
+  }
+
   async function handleExport() {
     try {
-      const { id } = await startExport()
+      const jobId = await startExport()
+      if (!jobId) throw new Error('No job ID received')
+      
       toast.info("Export started")
       
-      // Poll for export status
       const interval = setInterval(async () => {
-        const { status } = await checkExportStatus(id)
+        const status = await checkExportStatus(jobId)
         if (status === "DONE") {
           clearInterval(interval)
-          const blob = await downloadExportFile(id)
+          const blob = await downloadExportFile(jobId)
           const url = window.URL.createObjectURL(blob)
           const a = document.createElement('a')
           a.href = url
-          a.download = 'sections-export.xlsx'
+          a.download = 'sections-export.xls'
           document.body.appendChild(a)
           a.click()
           window.URL.revokeObjectURL(url)
@@ -85,19 +119,33 @@ export default function SectionsPage() {
         </div>
       </div>
 
-      <DataTable columns={columns} data={sectionPage ? sectionPage.content : []} />
+      <div className="space-y-4">
+        <DataTable 
+          columns={columns({ onEdit: handleEdit })} 
+          data={sectionPage.content} 
+        />
+        
+        <Pagination
+          currentPage={sectionPage.number}
+          pageSize={sectionPage.size}
+          totalPages={sectionPage.totalPages}
+          totalElements={sectionPage.totalElements}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
+        />
+      </div>
 
       <SectionDialog
         open={openDialog}
-        onOpenChange={setOpenDialog}
-        section={currentSection}
-        onSuccess={loadSections}
+        onOpenChange={handleCloseDialog}
+        section={selectedSection}
+        onSuccess={() => loadSections(sectionPage.number, sectionPage.size)}
       />
 
       <ImportDialog
         open={openImportDialog}
         onOpenChange={setOpenImportDialog}
-        onSuccess={loadSections}
+        onSuccess={() => loadSections(sectionPage.number, sectionPage.size)}
       />
     </div>
   )

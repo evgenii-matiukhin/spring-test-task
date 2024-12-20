@@ -1,31 +1,34 @@
-import { UUID } from "node:crypto";
-
 export interface Section {
-  id: bigint;
+  id: number | undefined;
   name: string;
   geologicalClasses: GeoClass[];
 }
 
 export interface GeoClass {
-  id: bigint;
+  id?: number | undefined;
   name: string;
   code: string;
 }
 
 export interface AsyncJob {
-  id: UUID;
-  status: 'DONE' | 'IN_PROGRESS' | 'ERROR';
+  id: string;
+  status: 'DONE' | 'IN PROGRESS' | 'ERROR';
+}
+
+export interface PageRequest {
+  page: number;
+  size: number;
 }
 
 export interface SectionPage {
-  content: Section[],
-  empty: boolean,
-  first: boolean,
-  last: boolean,
-  number: number,
-  numberOfElements: number,
-  size: number,
-  totalElements: bigint,
-  totalPages: number,
-  sort: object
+  content: Section[];
+  empty: boolean;
+  first: boolean;
+  last: boolean;
+  number: number;
+  numberOfElements: number;
+  size: number;
+  totalElements: bigint;
+  totalPages: number;
+  sort: object;
 }

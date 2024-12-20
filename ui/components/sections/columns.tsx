@@ -13,7 +13,11 @@ import {
 import { deleteSection } from "@/lib/api/sections"
 import type { Section } from "@/lib/types"
 
-export const columns = [
+interface ColumnsProps {
+  onEdit: (section: Section) => void;
+}
+
+export const columns = ({ onEdit }: ColumnsProps) => [
   {
     accessorKey: "name",
     header: "Name",
@@ -23,10 +27,7 @@ export const columns = [
     header: "Geological Classes",
     cell: ({ row }) => {
       const classes = row.original.geologicalClasses
-      return classes
-        .slice(0, 2) // Take the first 2 classes
-        .map((c) => c.name) // Map to names
-        .join(", ") + (classes.length > 2 ? "..." : "")
+      return classes.map(c => c.name).join(", ")
     },
   },
   {
@@ -42,12 +43,7 @@ export const columns = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => {
-                setOpenDialog(true); // Open the dialog
-                setCurrentSection(section); // Set the current section for editing
-              }}
-            >
+            <DropdownMenuItem onClick={() => onEdit(section)}>
               <Pencil className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>

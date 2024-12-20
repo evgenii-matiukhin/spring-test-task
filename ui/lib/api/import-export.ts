@@ -1,7 +1,7 @@
 import { API_CONFIG } from './config'
 import { useAuth } from '@/lib/hooks/useAuth'
 
-export async function startImport(file: File) {
+export async function startImport(file: File): Promise<any> {
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 
@@ -19,7 +19,7 @@ export async function startImport(file: File) {
   return response.json()
 }
 
-export async function checkImportStatus(jobId: string) {
+export async function checkImportStatus(jobId: string): Promise<any> {
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 
@@ -30,18 +30,19 @@ export async function checkImportStatus(jobId: string) {
   return response.json()
 }
 
-export async function startExport() {
+export async function startExport(): Promise<any> {
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 
   const response = await fetch(`${API_CONFIG.BASE_URL}/export`, {
     headers: API_CONFIG.getAuthHeaders(username, password),
+    method: 'POST',
   })
   if (!response.ok) throw new Error('Failed to start export')
   return response.json()
 }
 
-export async function checkExportStatus(jobId: string) {
+export async function checkExportStatus(jobId: string): Promise<any> {
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 
@@ -52,7 +53,7 @@ export async function checkExportStatus(jobId: string) {
   return response.json()
 }
 
-export async function downloadExportFile(jobId: string) {
+export async function downloadExportFile(jobId: string): Promise<Blob> {
   const { username, password } = useAuth.getState()
   if (!username || !password) throw new Error('Not authenticated')
 
