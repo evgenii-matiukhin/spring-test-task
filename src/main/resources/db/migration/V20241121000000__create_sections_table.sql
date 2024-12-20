@@ -1,6 +1,6 @@
 CREATE TABLE sections
 (
-    id BIGINT AUTO_INCREMENT NOT NULL,
+    id BIGSERIAL NOT NULL,
     name VARCHAR(100) NOT NULL,
     PRIMARY KEY (id)
 );

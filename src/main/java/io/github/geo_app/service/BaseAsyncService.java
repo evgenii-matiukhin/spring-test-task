@@ -5,6 +5,7 @@ import io.github.geo_app.model.JobContext;
 import io.github.geo_app.model.JobRecord;
 import io.github.geo_app.model.JobStatus;
 import io.github.geo_app.repository.JobRecordRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public abstract class BaseAsyncService {
     @Autowired
     protected JobRecordRepository jobRecordRepository;
 
+    @Transactional
     public UUID runJob(JobContext jobContext) {
         validate(jobContext);
         JobRecord jobRecord = JobRecord.builder()
@@ -43,7 +45,6 @@ public abstract class BaseAsyncService {
         return jobRecord.getStatus();
     }
 
-    @Async
     void wrapAsyncJob(JobRecord jobRecord, JobContext jobContext) {
         Thread.startVirtualThread(() -> {
             try {

@@ -46,9 +46,10 @@ public class ImportService extends BaseAsyncService {
     }
 
     @Override
-    protected void validate(JobContext jobContext) {
+    protected synchronized void validate(JobContext jobContext) {
         log.debug("Importing data from file " + jobContext.getFile().getOriginalFilename());
         List<JobRecord> existingJobs = jobRecordRepository.findJobRecordsByTypeAndStatus(JobType.IMPORT, JobStatus.IN_PROGRESS);
+
         if (!existingJobs.isEmpty()) {
             log.debug("There is already an import job in progress");
             throw new AlreadyPendingImportJobException();

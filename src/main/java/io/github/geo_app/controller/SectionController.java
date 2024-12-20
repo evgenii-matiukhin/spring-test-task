@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/v1/sections", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/v1/sections", produces = APPLICATION_JSON_VALUE)
 public class SectionController {
 
     private final SectionService sectionService;

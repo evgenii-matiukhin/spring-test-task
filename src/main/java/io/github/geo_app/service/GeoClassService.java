@@ -3,6 +3,7 @@ package io.github.geo_app.service;
 import io.github.geo_app.exceptions.GeoClassNotFoundException;
 import io.github.geo_app.model.GeoClass;
 import io.github.geo_app.repository.GeoClassRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,10 +26,12 @@ public class GeoClassService {
                 .orElseThrow(() -> new GeoClassNotFoundException(id));
     }
 
+    @Transactional
     public GeoClass createGeoClass(GeoClass geoClass) {
         return geoClassRepository.save(geoClass);
     }
 
+    @Transactional
     public GeoClass updateGeoClass(long id, GeoClass updatedGeoClass) {
         GeoClass existingGeoClass = geoClassRepository.findById(id)
                 .orElseThrow(() -> new GeoClassNotFoundException(id));
@@ -36,6 +39,7 @@ public class GeoClassService {
         return geoClassRepository.save(existingGeoClass);
     }
 
+    @Transactional
     public void deleteGeoClass(long id) {
         geoClassRepository.deleteById(id);
     }
